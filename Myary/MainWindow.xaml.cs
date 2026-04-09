@@ -27,5 +27,11 @@ namespace Myary
         {
             InitializeComponent();
         }
+
+        private void ToggleRightPane_Click(object sender, RoutedEventArgs e)
+        {
+            RightSidebarContent.Visibility = ToggleRightPaneButton.IsChecked == true
+                ? Visibility.Visible : Visibility.Collapsed;
+        }
     }
 }
