@@ -33,5 +33,21 @@ namespace Myary
             RightSidebarContent.Visibility = ToggleRightPaneButton.IsChecked == true
                 ? Visibility.Visible : Visibility.Collapsed;
         }
+
+        private void DayCalendar_SelectedDatesChanged(CalendarView sender,
+            CalendarViewSelectedDatesChangedEventArgs args)
+        {
+            // todo
+        }
+
+        private void DiaryEditor_DragOver(object sender, DragEventArgs e)
+        {
+            e.AcceptedOperation = Windows.ApplicationModel.DataTransfer.DataPackageOperation.Copy;
+        }
+
+        private void DiaryEditor_Drop(object sender, DragEventArgs e)
+        {
+            // todo
+        }
     }
 }
