@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Myary (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "Myary (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}

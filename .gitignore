@@ -1,0 +1,27 @@
+With the help of AI. I don't know much about this.
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+ 
+bin/
+obj/
+release/
+debug/
+
+AppPackages/
+BundleArtifacts/
+
+Generated Files/
+x64/
+x86/
+ARM/
+ARM/64
+
+*.db 
+*.sqlite
+*.sqlite3
+
+*.nupkg
+packages/
