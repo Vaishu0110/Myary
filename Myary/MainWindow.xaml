@@ -18,9 +18,9 @@
 
         <NavigationView.Resources>
             <SolidColorBrush x:Key="NavigationViewSelectionIndicatorForeground" Color="#D6A2A8"/>
-            <SolidColorBrush x:Key="NavigationViewItemForegroundSelected" Color="#D6A2A8"/>
-            <SolidColorBrush x:Key="NavigationViewItemForegroundSelectedPointerOver" Color="#D6A2A8"/>
-            <SolidColorBrush x:Key="NavigationViewItemForegroundSelectedPressed" Color="#E7C6C9"/>
+            <SolidColorBrush x:Key="NavigationViewItemForegroundSelected" Color="Black"/>
+            <SolidColorBrush x:Key="NavigationViewItemForegroundSelectedPointerOver" Color="Black"/>
+            <SolidColorBrush x:Key="NavigationViewItemForegroundSelectedPressed" Color="Black"/>
             <SolidColorBrush x:Key="NavigationViewItemBackgroundSelected" Color="#E7C6C9"/>
             <SolidColorBrush x:Key="NavigationViewItemBackgroundSelectedPointerOver" Color="#F1E9E9"/>
         </NavigationView.Resources>
