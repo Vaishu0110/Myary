@@ -6,7 +6,6 @@
     xmlns:local="using:Myary"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:services="using:Myary.Services"
     mc:Ignorable="d"
     Title="Myary">
 
@@ -18,7 +17,6 @@
                     CompactPaneLength="50">
 
         <NavigationView.Resources>
-            <services:FavoriteIconConverter x:Key="FavoriteIconConverter"/>
             <SolidColorBrush x:Key="NavigationViewSelectionIndicatorForeground" Color="#D6A2A8"/>
             <SolidColorBrush x:Key="NavigationViewItemForegroundSelected" Color="Black"/>
             <SolidColorBrush x:Key="NavigationViewItemForegroundSelectedPointerOver" Color="Black"/>
@@ -207,12 +205,34 @@
                                         <Button.Content>
                                             <FontIcon Glyph="&#xE790;" FontSize="16"/>
                                         </Button.Content>
+
+                                        <Button.Flyout>
+                                            <MenuFlyout>
+                                                <MenuFlyoutItem Text="Charcoal" Click="Color_Click" Tag="#363537"/>
+                                                <MenuFlyoutItem Text="Black" Click="Color_Click" Tag="#000000"/>
+                                                <MenuFlyoutItem Text="White" Click="Color_Click" Tag="#FFFFFF"/>
+                                                <MenuFlyoutItem Text="Red" Click="Color_Click" Tag="#D30000"/>
+                                                <MenuFlyoutItem Text="Dusty Rose" Click="Color_Click" Tag="#D6A2A8"/>
+                                                <MenuFlyoutItem Text="Muted Blush" Click="Color_Click" Tag="#E7C6C9"/>
+                                            </MenuFlyout>
+                                        </Button.Flyout>
                                     </Button>
 
                                     <Button ToolTipService.ToolTip="Highlighter">
                                         <Button.Content>
                                             <FontIcon Glyph="&#xE7E6;" FontSize="16"/>
                                         </Button.Content>
+                                        <Button.Flyout>
+                                        <MenuFlyout>
+                                            <MenuFlyoutItem Text="No Highlight" Click="Highlight_Click" Tag="Transparent"/>
+                                            <MenuFlyoutItem Text="Charcoal" Click="Highlight_Click" Tag="#363537"/>
+                                            <MenuFlyoutItem Text="Black" Click="Highlight_Click" Tag="#000000"/>
+                                            <MenuFlyoutItem Text="White" Click="Highlight_Click" Tag="#FFFFFF"/>
+                                            <MenuFlyoutItem Text="Red" Click="Highlight_Click" Tag="#D30000"/>
+                                            <MenuFlyoutItem Text="Dusty Rose" Click="Highlight_Click" Tag="#D6A2A8"/>
+                                            <MenuFlyoutItem Text="Muted Blush" Click="Highlight_Click" Tag="#E7C6C9"/>
+                                        </MenuFlyout>
+                                        </Button.Flyout>
                                     </Button>
 
                                 <AppBarSeparator Margin="5,0"/>

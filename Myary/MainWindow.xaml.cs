@@ -219,6 +219,38 @@ namespace Myary
             }
             FavoriteIcon.Glyph = ViewModel.ActiveEntry.IsBookmarked ? "\uEB52" : "\uEB51";
         }
+
+        private void Color_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is MenuFlyoutItem item)
+            {
+                var color = HexToColor(item.Tag.ToString());
+                DiaryEditor.Document.Selection.CharacterFormat.ForegroundColor = color;
+            }
+        }
+
+        private void Highlight_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is MenuFlyoutItem item)
+            {
+                var color = HexToColor(item.Tag.ToString());
+                DiaryEditor.Document.Selection.CharacterFormat.BackgroundColor = color;
+            }
+        }
+
+        private Windows.UI.Color HexToColor(string hex)
+        {
+            if (hex == "Transparent")
+                return Windows.UI.Color.FromArgb(0, 0, 0, 0);
+
+            hex = hex.TrimStart('#');
+
+            byte r = System.Convert.ToByte(hex.Substring(0, 2), 16);
+            byte g = System.Convert.ToByte(hex.Substring(2, 2), 16);
+            byte b = System.Convert.ToByte(hex.Substring(4, 2), 16);
+
+            return Windows.UI.Color.FromArgb(255, r, g, b);
+        }
     }
 }
 
