@@ -165,6 +165,7 @@
                                      DragOver="DiaryEditor_DragOver"
                                      Drop="DiaryEditor_Drop"
                                      LostFocus="DiaryEditor_LostFocus"
+                                     Tapped="DiaryEditor_Tapped"
                          />
 
                         <Border VerticalAlignment="Bottom"
@@ -237,12 +238,12 @@
 
                                 <AppBarSeparator Margin="5,0"/>
 
-                                <Button ToolTipService.ToolTip="Insert Image">
+                                <Button ToolTipService.ToolTip="Insert Image" Click="InsertImage_Click">
                                         <Button.Content>
                                             <FontIcon Glyph="&#xEB9F;" FontSize="16"/>
                                         </Button.Content>
                                     </Button>
-                                    <Button ToolTipService.ToolTip="Insert Audio">
+                                    <Button ToolTipService.ToolTip="Insert Audio" Click="InsertAudio_Click">
                                         <Button.Content>
                                             <FontIcon Glyph="&#xE720;" FontSize="16"/>
                                         </Button.Content>
@@ -315,6 +316,25 @@
                         </Grid>
                     </Grid>
                 </Border>
+
+            <Popup x:Name="AudioPlayerPopup" IsLightDismissEnabled="True">
+                <Border Background="#F1E9E9" CornerRadius="12" Padding="15"
+                        BorderBrush="#D6A2A8" BorderThickness="1"
+                        Width="320">
+                    <StackPanel Spacing="10">
+                        <TextBlock x:Name="AudioFileLabel"
+                                   Text="Now Playing..."
+                                   Foreground="#363537"
+                                   FontWeight="SemiBold"
+                                   TextTrimming="CharacterEllipsis"/>
+
+                        <MediaPlayerElement x:Name="AudioPlayer"
+                                            AreTransportControlsEnabled="True"
+                                            AutoPlay="False"
+                                            HorizontalAlignment="Stretch"/>
+                    </StackPanel>
+                </Border>
+            </Popup>
             </Grid>
     </NavigationView>
 </Window>

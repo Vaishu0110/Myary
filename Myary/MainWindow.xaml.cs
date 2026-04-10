@@ -6,6 +6,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Text;
 using Microsoft.UI.Xaml.Controls;
+using Windows.Media.Core;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
@@ -18,6 +19,7 @@ using Myary.Services;
 using System.Threading.Tasks;
 using Windows.Security.Cryptography.Core;
 using Myary.Models;
+using Windows.Storage;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -32,6 +34,7 @@ namespace Myary
         public MainViewModel ViewModel { get; } = new MainViewModel();
 
         private bool _isCalendarUpdating = false;
+        private readonly Dictionary<string, string> _audioTags = new Dictionary<string, string>();
 
         public MainWindow()
         {
@@ -137,9 +140,18 @@ namespace Myary
             }
         }
 
-        private void DiaryEditor_Drop(object sender, DragEventArgs e)
+        private async void DiaryEditor_Drop(object sender, DragEventArgs e)
         {
-            // todo
+            if (e.DataView.Contains(
+                Windows.ApplicationModel.DataTransfer.StandardDataFormats.StorageItems))
+            {
+                var items = await e.DataView.GetStorageItemsAsync();
+                foreach (var item in items)
+                {
+                    if (item is StorageFile file)
+                        await InsertMediaFileAsync(file);
+                }
+            }
         }
 
         private async void DiaryEditor_LostFocus(object sender, RoutedEventArgs e)
@@ -250,6 +262,107 @@ namespace Myary
             byte b = System.Convert.ToByte(hex.Substring(4, 2), 16);
 
             return Windows.UI.Color.FromArgb(255, r, g, b);
+        }
+
+        private async Task InsertMediaFileAsync(StorageFile file)
+        {
+            if (ViewModel.ActiveEntry == null) return;
+            var mediaFolder = await DatabaseService.GetMediaFolderAsync();
+            var copiedFile = await file.CopyAsync(mediaFolder, file.Name,
+                NameCollisionOption.GenerateUniqueName);
+
+            var attachment = new MediaAttachment
+            {
+                DiaryEntryId = ViewModel.ActiveEntry.Id,
+                FilePath = copiedFile.Path,
+                FileType = file.ContentType.StartsWith("image") ? "Image" : "Audio"
+            };
+            await DatabaseService.SaveAttachmentAsync(attachment);
+            
+            if (attachment.FileType == "Image")
+            {
+                using var stream = await copiedFile.OpenAsync(FileAccessMode.Read);
+                DiaryEditor.Document.Selection.InsertImage(
+                    200, 150, 0,
+                    VerticalCharacterAlignment.Baseline,
+                    copiedFile.Name,
+                    stream);
+            }
+            else
+            {
+                string audioId = Guid.NewGuid().ToString("N").Substring(0, 8);
+                _audioTags[audioId] = copiedFile.Path;
+
+                string tag = $"\u27EA {System.IO.Path.GetFileName(copiedFile.Path)} \u27EB";
+                
+                DiaryEditor.Document.Selection.TypeText(tag);
+                DiaryEditor.Document.Selection.MoveStart(TextRangeUnit.Character, -tag.Length);
+                DiaryEditor.Document.Selection.CharacterFormat.BackgroundColor =
+                    Windows.UI.Color.FromArgb(255, 231, 198, 201);
+                DiaryEditor.Document.Selection.CharacterFormat.Bold = FormatEffect.On;
+
+                DiaryEditor.Document.Selection.MoveStart(TextRangeUnit.Character, tag.Length);
+                DiaryEditor.Document.Selection.TypeText($"\u200B{audioId}\u200B");
+            }
+        }
+
+        private async void InsertImage_Click(object sender, RoutedEventArgs e)
+        {
+            var picker = new Windows.Storage.Pickers.FileOpenPicker();
+            picker.FileTypeFilter.Add(".jpg");
+            picker.FileTypeFilter.Add(".jpeg");
+            picker.FileTypeFilter.Add(".png");
+            picker.FileTypeFilter.Add(".gif");
+            picker.FileTypeFilter.Add(".bmp");
+
+            var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
+            WinRT.Interop.InitializeWithWindow.Initialize(picker, hwnd);
+
+            var file = await picker.PickSingleFileAsync();
+            if (file != null)
+                await InsertMediaFileAsync(file);
+        }
+
+        private async void InsertAudio_Click(object sender, RoutedEventArgs e)
+        {
+            var picker = new Windows.Storage.Pickers.FileOpenPicker();
+            picker.FileTypeFilter.Add(".mp3");
+            picker.FileTypeFilter.Add(".wav");
+            picker.FileTypeFilter.Add(".m4a");
+            picker.FileTypeFilter.Add(".ogg");
+
+            var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
+            WinRT.Interop.InitializeWithWindow.Initialize(picker, hwnd);
+
+            var file = await picker.PickSingleFileAsync();
+            if (file != null)
+                await InsertMediaFileAsync(file);
+        }
+
+        private void DiaryEditor_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            if (_audioTags.Count == 0) return;
+
+            var selection = DiaryEditor.Document.Selection;
+
+            selection.Expand(TextRangeUnit.Line);
+            selection.GetText(TextGetOptions.None, out string lineText);
+
+            foreach (var kvp in _audioTags)
+            {
+                if (lineText != null && lineText.Contains(kvp.Key))
+                {
+                    AudioFileLabel.Text = System.IO.Path.GetFileName(kvp.Value);
+                    AudioPlayer.Source = Windows.Media.Core.MediaSource.CreateFromUri(
+                        new Uri("file:///" + kvp.Value.Replace("\\","/")));
+
+                    var tapPoint = e.GetPosition(this.Content as UIElement);
+                    AudioPlayerPopup.HorizontalOffset = tapPoint.X;
+                    AudioPlayerPopup.VerticalOffset = tapPoint.Y - 140;
+                    AudioPlayerPopup.IsOpen = true;
+                    return;
+                }
+            }
         }
     }
 }

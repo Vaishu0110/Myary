@@ -77,5 +77,27 @@ namespace Myary.Services
             await InitAsync();
             return await _db.UpdateAsync(metadata);
         }
+
+        public static async Task<StorageFolder> GetMediaFolderAsync()
+        {
+            return await ApplicationData.Current.LocalFolder
+                .CreateFolderAsync("Media", CreationCollisionOption.OpenIfExists);
+        }
+
+        public static async Task<int> SaveAttachmentAsync(MediaAttachment attachment)
+        {
+            await InitAsync();
+            return await _db.InsertAsync(attachment);
+        }
     }
 }
+
+
+
+
+
+
+
+
+
+
