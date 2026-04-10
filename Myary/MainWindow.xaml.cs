@@ -70,6 +70,7 @@ namespace Myary
 
         private async Task InitializeAppAsync()
         {
+            MainNavView.SelectedItem = HomeNavItem;
             await DatabaseService.InitAsync();
             DayCalendar.SelectedDates.Clear();
             DayCalendar.SelectedDates.Add(new DateTimeOffset(DateTime.Today));
