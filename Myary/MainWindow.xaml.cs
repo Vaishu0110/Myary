@@ -162,6 +162,8 @@ namespace Myary
 
             else
                 DiaryEditor.Document.SetText(TextSetOptions.FormatRtf, ViewModel.ActiveEntry.RichTextContent);
+
+            UpdateFavoriteIcon();
         }
 
         private void BoldButton_Click(object sender, RoutedEventArgs e) =>
@@ -194,6 +196,28 @@ namespace Myary
             {
                 await ViewModel.DeleteEntryCommand.ExecuteAsync(entry);
             }
+        }
+
+        private async void FavoriteToggle_Click(object sender, RoutedEventArgs e)
+        {
+            if (ViewModel.ActiveEntry == null) return;
+
+            ViewModel.ActiveEntry.IsBookmarked = !ViewModel.ActiveEntry.IsBookmarked;
+            ViewModel.ActiveEntry.UpdatedAt = DateTime.Now;
+
+            FavoriteIcon.Glyph = ViewModel.ActiveEntry.IsBookmarked ? "\uEB52" : "\uEB51";
+
+            await DatabaseService.SaveEntryAsync(ViewModel.ActiveEntry);
+        }
+
+        private void UpdateFavoriteIcon()
+        {
+            if (ViewModel.ActiveEntry == null)
+            {
+                FavoriteIcon.Glyph = "\uEB51";
+                return;
+            }
+            FavoriteIcon.Glyph = ViewModel.ActiveEntry.IsBookmarked ? "\uEB52" : "\uEB51";
         }
     }
 }
