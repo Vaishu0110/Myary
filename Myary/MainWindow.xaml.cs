@@ -194,8 +194,13 @@ namespace Myary
         private void ItalicButton_Click(object sender, RoutedEventArgs e) =>
             DiaryEditor.Document.Selection.CharacterFormat.Italic = FormatEffect.Toggle;
 
-        private void UnderlineButton_Click(object sender, RoutedEventArgs e) =>
-            DiaryEditor.Document.Selection.CharacterFormat.Underline = UnderlineType.Single;
+        private void UnderlineButton_Click(object sender, RoutedEventArgs e)
+        {
+            DiaryEditor.Document.Selection.CharacterFormat.Underline =
+                DiaryEditor.Document.Selection.CharacterFormat.Underline == UnderlineType.Single
+                ? UnderlineType.None
+                : UnderlineType.Single;
+        }
 
         private void FontBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
