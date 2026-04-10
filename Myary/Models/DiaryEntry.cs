@@ -18,7 +18,7 @@ namespace Myary.Models
 
         public string BackgroundConfig { get; set; }
 
-        public BooleanKeyFrameAnimation IsBookmarked { get; set; }
+        public bool IsBookmarked { get; set; }
 
         public DateTime CreatedAt { get; set; }
 
