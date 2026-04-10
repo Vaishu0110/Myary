@@ -373,6 +373,59 @@ namespace Myary
                 }
             }
         }
+
+        private void MainNavView_SelectionChanged(NavigationView sender,
+            NavigationViewSelectionChangedEventArgs args)
+        {
+            if (args.SelectedItem is NavigationViewItem item)
+            {
+                switch(item.Tag?.ToString())
+                {
+                    case "Home":
+                        HomeContent.Visibility = Visibility.Visible;
+                        MainFrame.Visibility = Visibility.Collapsed;
+                        break;
+                    case "Favorites":
+                        HomeContent.Visibility = Visibility.Collapsed;
+                        MainFrame.Visibility = Visibility.Visible;
+                        MainFrame.Navigate(typeof(Views.FavoritesPage));
+                        break;
+                    case "Settings":
+                        HomeContent.Visibility = Visibility.Collapsed;
+                        MainFrame.Visibility = Visibility.Visible;
+                        MainFrame.Navigate(typeof(Views.SettingsPage));
+                        break;
+                }
+            }
+        }
+
+        public void NavigateToEntry(DiaryEntry entry)
+        {
+            HomeContent.Visibility = Visibility.Visible;
+            MainFrame.Visibility = Visibility.Collapsed;
+            MainNavView.SelectedItem = HomeNavItem;
+
+            _isCalendarUpdating = true;
+            ViewModel.SelectedDate = entry.Date;
+            DayCalendar.SelectedDates.Clear();
+            DayCalendar.SelectedDates.Add(new DateTimeOffset(entry.Date));
+            DayCalendar.SetDisplayDate(new DateTimeOffset(entry.Date));
+            _isCalendarUpdating = false;
+
+            _ = LoadAndSelectEntryAsync(entry);
+        }
+
+        private async Task LoadAndSelectEntryAsync(DiaryEntry target)
+        {
+            var dayNotes = await DatabaseService.GetEntriesForDateAsync(target.Date);
+            ViewModel.CurrentDayEntries.Clear();
+            foreach (var note in dayNotes)
+            {
+                ViewModel.CurrentDayEntries.Add(note);
+            }
+
+            ViewModel.ActiveEntry = ViewModel.CurrentDayEntries.FirstOrDefault(n => n.Id == target.Id);
+        }
     }
 }
 

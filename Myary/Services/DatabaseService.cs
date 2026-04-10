@@ -89,6 +89,15 @@ namespace Myary.Services
             await InitAsync();
             return await _db.InsertAsync(attachment);
         }
+
+        public static async Task<List<DiaryEntry>> GetBookmarkedEntriesAsync()
+        {
+            await InitAsync();
+            return await _db.Table<DiaryEntry>()
+                .Where(e => e.IsBookmarked == true)
+                .OrderByDescending(e => e.Date)
+                .ToListAsync();
+        }
     }
 }
 
