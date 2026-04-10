@@ -298,13 +298,14 @@
                             </Viewbox>
 
                             <Button x:Name="RandomEntryButton"
-                            HorizontalAlignment="Stretch"
-                            VerticalAlignment="Bottom"
-                            Height="50"
-                            CornerRadius="8"
-                            Background="#D6A2A8"
-                            Foreground="#363537"
-                            Margin="5">
+                                    Command="{x:Bind ViewModel.OpenRandomEntryCommand}"
+                                    HorizontalAlignment="Stretch"
+                                    VerticalAlignment="Bottom"
+                                    Height="50"
+                                    CornerRadius="8"
+                                    Background="#D6A2A8"
+                                    Foreground="#363537"
+                                    Margin="5">
                                 <StackPanel Orientation="Horizontal" Spacing="10"
                                         HorizontalAlignment="Center">
                                     <FontIcon Glyph="&#xE8B1;" FontSize="16"/>

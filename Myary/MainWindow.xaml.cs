@@ -44,6 +44,15 @@ namespace Myary
             {
                 if (e.PropertyName == nameof(ViewModel.ActiveEntry))
                     LoadActiveNoteIntoEditor();
+
+                if (e.PropertyName == nameof(ViewModel.SelectedDate))
+                {
+                    _isCalendarUpdating = true;
+                    DayCalendar.SelectedDates.Clear();
+                    DayCalendar.SelectedDates.Add(new DateTimeOffset(ViewModel.SelectedDate));
+                    DayCalendar.SetDisplayDate(new DateTimeOffset(ViewModel.SelectedDate));
+                    _isCalendarUpdating = false;
+                }
             };
 
             this.Activated += MainWindow_Activated;

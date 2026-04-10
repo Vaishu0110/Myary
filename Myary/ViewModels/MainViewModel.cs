@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using Myary.Models;
 using CommunityToolkit.Mvvm.Input;
 using Myary.Services;
+using System.Linq;
 
 namespace Myary.ViewModels
 {
@@ -62,6 +63,24 @@ namespace Myary.ViewModels
 
         [ObservableProperty]
         private ObservableCollection<DiaryEntry> _currentDayEntries = new ObservableCollection<DiaryEntry>();
+
+        [RelayCommand]
+        private async Task OpenRandomEntryAsync()
+        {
+            var randomNote = await DatabaseService.GetRandomEntryAsync();
+            if (randomNote == null) return;
+
+            SelectedDate = randomNote.Date;
+
+            var dayNotes = await DatabaseService.GetEntriesForDateAsync(randomNote.Date);
+            CurrentDayEntries.Clear();
+            foreach(var note in dayNotes)
+            {
+                CurrentDayEntries.Add(note);
+            }
+
+            ActiveEntry = CurrentDayEntries.FirstOrDefault(n => n.Id == randomNote.Id);
+        }
 
         public MainViewModel()
         {
