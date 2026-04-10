@@ -70,12 +70,15 @@
                         <StackPanel Orientation="Horizontal"
                                     HorizontalAlignment="Right"
                                     Spacing="10">
+                            
+                            <!--
                             <Button ToolTipService.ToolTip="Set Day Background">
                                 <Button.Content>
                                     <FontIcon Glyph="&#xE2B1;" FontSize="14"/>
                                 </Button.Content>
                             </Button>
-
+                            -->
+                            
                             <Button Content="+ Add Entry" Background="#D6A2A8"
                                     Foreground="#363537" FontWeight="SemiBold" 
                                         Command="{x:Bind ViewModel.AddEntryCommand}"/>
